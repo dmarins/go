@@ -18,9 +18,12 @@ func main() {
 	println(anything5, anything6)
 
 	var (
-		anything7 string = "anything7"
-		anything8 string = "anything8"
+		anything7 string  = "anything7"
+		anything8 float64 = 1.0
 	)
 	println(anything7, anything8)
+
+	const anything9 = 1
+	println(anything9)
 
 }
