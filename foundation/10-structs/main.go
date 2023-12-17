@@ -14,6 +14,19 @@ func newPerson(name string) *person {
 	return &p
 }
 
+type address struct {
+	street string
+	number int
+	city   string
+	state  string
+}
+
+type customer struct {
+	name   string
+	active bool
+	address
+}
+
 func main() {
 
 	fmt.Println(person{"Bob", 20})
@@ -43,4 +56,17 @@ func main() {
 		true,
 	}
 	fmt.Println(dog)
+
+	john := customer{
+		name:   "john",
+		active: true,
+		address: address{
+			street: "main street",
+			number: 1001,
+			city:   "city",
+			state:  "state",
+		},
+	}
+
+	fmt.Printf("%+v", john)
 }
