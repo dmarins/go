@@ -21,6 +21,17 @@ func getResult(value int) (string, error) {
 	return "fail,", errors.New("an error occurred")
 }
 
+func sum(nums ...int) int {
+	fmt.Print(nums, " ")
+	total := 0
+
+	for _, num := range nums {
+		total += num
+	}
+
+	return total
+}
+
 func main() {
 
 	res := plus(1, 2)
@@ -29,9 +40,15 @@ func main() {
 	res = plusPlus(1, 2, 3)
 	fmt.Println("1+2+3 =", res)
 
+	fmt.Println("=", sum(1, 2, 3))
+
+	nums := []int{1, 2, 3, 4}
+	fmt.Println("=", sum(nums...))
+
 	result, error := getResult(0)
 	fmt.Println(result, error)
 
 	result, error = getResult(1)
 	fmt.Println(result, error)
+
 }
