@@ -9,7 +9,7 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}/foundation/09-closures/main.go"
+            "program": "${workspaceFolder}/import-packages/06-cep-api/main.go"
         }
     ]
 }
