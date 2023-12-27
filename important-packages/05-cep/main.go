@@ -21,11 +21,11 @@ type Address struct {
 	Siafi       string `json:"siafi"`
 }
 
-// go run import-packages/05-cep/main.go 20020080
-// cat import-packages/05-cep/address.txt
+// go run important-packages/05-cep/main.go 20020080
+// cat important-packages/05-cep/address.txt
 
-// go build -o import-packages/05-cep/cep import-packages/05-cep/main.go
-// ./import-packages/05-cep/cep 20020080
+// go build -o important-packages/05-cep/cep important-packages/05-cep/main.go
+// ./important-packages/05-cep/cep 20020080
 func main() {
 	for _, cep := range os.Args[1:] {
 
@@ -48,7 +48,7 @@ func main() {
 			fmt.Fprintf(os.Stderr, "fail: %v\n", err)
 		}
 
-		file, err := os.Create("./import-packages/05-cep/address.txt")
+		file, err := os.Create("./important-packages/05-cep/address.txt")
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "fail: %v\n", err)
 		}

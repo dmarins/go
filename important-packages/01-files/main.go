@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	f, err := os.Create("./import-packages/01-files/file.txt")
+	f, err := os.Create("./important-packages/01-files/file.txt")
 	if err != nil {
 		panic(err)
 	}
@@ -19,7 +19,7 @@ func main() {
 
 	fmt.Printf("File created successfully. Size: %d bytes\n\n", size)
 
-	file, err := os.Open("./import-packages/01-files/file.txt")
+	file, err := os.Open("./important-packages/01-files/file.txt")
 	if err != nil {
 		panic(err)
 	}
@@ -36,7 +36,7 @@ func main() {
 		fmt.Printf("File read in parts: %v\n\n", string(buffer[:n]))
 	}
 
-	file2, err := os.ReadFile("./import-packages/01-files/file.txt")
+	file2, err := os.ReadFile("./important-packages/01-files/file.txt")
 	if err != nil {
 		panic(err)
 	}
