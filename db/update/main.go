@@ -14,7 +14,7 @@ type Product struct {
 
 func NewProduct(name string, price float64) *Product {
 	return &Product{
-		ID:    "c93d4bee-3efa-4bd4-a9e4-127bd4873380",
+		ID:    "",
 		Name:  name,
 		Price: price,
 	}
@@ -29,21 +29,24 @@ func main() {
 	defer db.Close()
 
 	product := NewProduct("Notebook", 1899.90)
-	err = insertProduct(db, product)
+	product.ID = "c93d4bee-3efa-4bd4-a9e4-127bd4873380"
+	product.Price = 100.00
+
+	err = updateProduct(db, product)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func insertProduct(db *sql.DB, product *Product) error {
-	stmt, err := db.Prepare("insert into products(id,name,price) values (?,?,?)")
+func updateProduct(db *sql.DB, product *Product) error {
+	stmt, err := db.Prepare("update products set name = ?, price = ? where id = ?")
 	if err != nil {
 		return err
 	}
 
 	defer stmt.Close()
 
-	_, err = stmt.Exec(product.ID, product.Name, product.Price)
+	_, err = stmt.Exec(product.Name, product.Price, product.ID)
 	if err != nil {
 		return err
 	}
