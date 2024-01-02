@@ -29,12 +29,19 @@ func main() {
 
 	defer db.Close()
 
-	product, err := selectProduct(db, "c93d4bee-3efa-4bd4-a9e4-127bd4873380")
+	product, err := selectProduct(db, "55142464-b068-4664-b873-3c3d6bd77a0e")
 	if err != nil {
 		panic(err)
 	}
 
 	log.Println(product)
+
+	products, err := selectProducts(db)
+	if err != nil {
+		panic(err)
+	}
+
+	log.Println(products)
 }
 
 func selectProduct(db *sql.DB, id string) (*Product, error) {
@@ -53,4 +60,26 @@ func selectProduct(db *sql.DB, id string) (*Product, error) {
 	}
 
 	return &product, nil
+}
+
+func selectProducts(db *sql.DB) ([]Product, error) {
+	rows, err := db.Query("select id, name, price from products")
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	products := []Product{}
+	for rows.Next() {
+		var p Product
+		err = rows.Scan(&p.ID, &p.Name, &p.Price)
+		if err != nil {
+			return nil, err
+		}
+
+		products = append(products, p)
+	}
+
+	return products, nil
 }

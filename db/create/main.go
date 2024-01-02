@@ -4,6 +4,7 @@ import (
 	"database/sql"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/google/uuid"
 )
 
 type Product struct {
@@ -14,7 +15,7 @@ type Product struct {
 
 func NewProduct(name string, price float64) *Product {
 	return &Product{
-		ID:    "c93d4bee-3efa-4bd4-a9e4-127bd4873380",
+		ID:    uuid.New().String(),
 		Name:  name,
 		Price: price,
 	}
@@ -30,6 +31,12 @@ func main() {
 
 	product := NewProduct("Notebook", 1899.90)
 	err = insertProduct(db, product)
+	if err != nil {
+		panic(err)
+	}
+
+	product2 := NewProduct("Mouse", 40.90)
+	err = insertProduct(db, product2)
 	if err != nil {
 		panic(err)
 	}
