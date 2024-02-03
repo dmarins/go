@@ -7,10 +7,18 @@ import (
 	"gorm.io/gorm"
 )
 
+type Category struct {
+	ID   int `gorm:"primaryKey"`
+	Name string
+}
+
 type Product struct {
-	ID    int `gorm:"primaryKey"`
-	Name  string
-	Price float64
+	ID         int `gorm:"primaryKey"`
+	Name       string
+	Price      float64
+	CategoryID int
+	Category   Category
+	gorm.Model
 }
 
 // docker-compose up -d
@@ -18,7 +26,7 @@ type Product struct {
 // mysql -u root -p go
 
 func main() {
-	dsn := "root:root@tcp(localhost:3306)/go"
+	dsn := "root:root@tcp(localhost:3306)/go?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
@@ -26,9 +34,13 @@ func main() {
 
 	db.AutoMigrate(&Product{})
 
+	// category := Category{Name: "Eletronics"}
+	// db.Create(&category)
+
 	// db.Create(&Product{
-	// 	Name:  "Mouse",
-	// 	Price: 100.00,
+	// 	Name:       "Notebook",
+	// 	Price:      1000.00,
+	// 	CategoryID: category.ID,
 	// })
 
 	// var product Product
@@ -60,14 +72,20 @@ func main() {
 	// 	fmt.Println(product)
 	// }
 
-	var p Product
-	db.First(&p, 1)
-	fmt.Println(p)
-	p.Name = "Keyboard"
-	db.Save(&p)
+	// var p Product
+	// db.First(&p, 3)
+	// fmt.Println(p)
+	// p.Name = "Keyboard"
+	// db.Save(&p)
 
-	var p2 Product
-	db.First(&p2, 1)
-	fmt.Println(p2)
-	db.Delete(&p2)
+	// var p2 Product
+	// db.First(&p2, 4)
+	// fmt.Println(p2)
+	// db.Delete(&p2)
+
+	var products []Product
+	db.Preload("Category").Find(&products)
+	for _, product := range products {
+		fmt.Println(product.Name, product.Category.Name)
+	}
 }
