@@ -13,12 +13,19 @@ type Category struct {
 }
 
 type Product struct {
-	ID         int `gorm:"primaryKey"`
-	Name       string
-	Price      float64
-	CategoryID int
-	Category   Category
+	ID           int `gorm:"primaryKey"`
+	Name         string
+	Price        float64
+	CategoryID   int
+	Category     Category
+	SerialNumber SerialNumber
 	gorm.Model
+}
+
+type SerialNumber struct {
+	ID        int `gorm:"primaryKey"`
+	Number    string
+	ProductID int
 }
 
 // docker-compose up -d
@@ -32,7 +39,7 @@ func main() {
 		panic(err)
 	}
 
-	db.AutoMigrate(&Product{})
+	db.AutoMigrate(&Product{}, &Category{}, &SerialNumber{})
 
 	// category := Category{Name: "Eletronics"}
 	// db.Create(&category)
@@ -42,6 +49,11 @@ func main() {
 	// 	Price:      1000.00,
 	// 	CategoryID: category.ID,
 	// })
+
+	db.Create(&SerialNumber{
+		Number:    "123456",
+		ProductID: 1,
+	})
 
 	// var product Product
 	// db.First(&product, 1)
@@ -84,8 +96,8 @@ func main() {
 	// db.Delete(&p2)
 
 	var products []Product
-	db.Preload("Category").Find(&products)
+	db.Preload("Category").Preload("SerialNumber").Find(&products)
 	for _, product := range products {
-		fmt.Println(product.Name, product.Category.Name)
+		fmt.Println(product.Name, product.Category.Name, product.SerialNumber.Number)
 	}
 }
