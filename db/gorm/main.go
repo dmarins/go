@@ -10,15 +10,14 @@ import (
 type Category struct {
 	ID       int `gorm:"primaryKey"`
 	Name     string
-	Products []Product
+	Products []Product `gorm:"many2many:products_categories;"`
 }
 
 type Product struct {
 	ID           int `gorm:"primaryKey"`
 	Name         string
 	Price        float64
-	CategoryID   int
-	Category     Category
+	Categories   []Category `gorm:"many2many:products_categories;"`
 	SerialNumber SerialNumber
 	gorm.Model
 }
@@ -45,10 +44,13 @@ func main() {
 	// category := Category{Name: "Eletronics"}
 	// db.Create(&category)
 
+	// category2 := Category{Name: "Kitchen"}
+	// db.Create(&category2)
+
 	// db.Create(&Product{
-	// 	Name:       "Notebook",
-	// 	Price:      1000.00,
-	// 	CategoryID: category.ID,
+	// 	Name:       "Rice Pan",
+	// 	Price:      990.00,
+	// 	Categories: []Category{category, category2},
 	// })
 
 	// db.Create(&SerialNumber{
@@ -96,11 +98,11 @@ func main() {
 	// fmt.Println(p2)
 	// db.Delete(&p2)
 
-	var products []Product
-	db.Preload("Category").Preload("SerialNumber").Find(&products)
-	for _, product := range products {
-		fmt.Println(product.Name, product.Category.Name, product.SerialNumber.Number)
-	}
+	// var products []Product
+	// db.Preload("Category").Preload("SerialNumber").Find(&products)
+	// for _, product := range products {
+	// 	fmt.Println(product.Name, product.Category.Name, product.SerialNumber.Number)
+	// }
 
 	var categories []Category
 	err = db.Model(&Category{}).Preload("Products").Preload("Products.SerialNumber").Find(&categories).Error
@@ -109,9 +111,24 @@ func main() {
 	}
 
 	for _, category := range categories {
-		fmt.Println(category.Name, ":")
+		fmt.Printf("%s:\n", category.Name)
 		for _, product := range category.Products {
-			fmt.Printf("- %s (%s)", product.Name, product.SerialNumber.Number)
+			fmt.Printf("- %s (%s)\n", product.Name, product.SerialNumber.Number)
+		}
+	}
+
+	fmt.Println()
+
+	var products []Product
+	err = db.Model(&Product{}).Preload("SerialNumber").Preload("Categories").Find(&products).Error
+	if err != nil {
+		panic(err)
+	}
+
+	for _, product := range products {
+		fmt.Printf("%s (%s):\n", product.Name, product.SerialNumber.Number)
+		for _, category := range product.Categories {
+			fmt.Printf("- %s\n", category.Name)
 		}
 	}
 }
